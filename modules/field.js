@@ -5,6 +5,7 @@ export class Field {
         this.state = 'hidden' // flagged, hidden, shown
         this.count = 0;
         this.isMine = false;
+        this.color = 'white'
     }
 
     getPos() {
@@ -16,28 +17,27 @@ export class Field {
 
     draw(ctx) {
         const { x, y } = this.getPos();
-        ctx.fillStyle = this.getStroke();
-        ctx.rect(x, y, Field.WIDTH, Field.HEIGHT);
+        ctx.drawField(x, y, Field.WIDTH/2, this.getFill());
     }
 
-    getStroke() {
+    getFill() {
         switch (this.state) {
             case 'hidden':
-                return 'rgba(0,0,0,1)'
+                return 'rgba(40, 40, 40, 1)'
             case 'flagged':
                 return 'rgba(255,0,0,1)'
             case 'shown':
-                return 'rgba(255,255,255,1)'
+                return 'rgba(100, 100, 100, 1)'
             default:
-                return 'rgba(0,0,200,0)'
+                return 'rgba(0,0,200,1)'
         }
     }
 
     static get WIDTH() {
-        return 30;
+        return 40;
     }
 
     static get HEIGHT() {
-        return 30;
+        return 40;
     }
 }
