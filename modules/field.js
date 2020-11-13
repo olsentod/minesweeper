@@ -6,6 +6,7 @@ export class Field {
         this.count = 0;
         this.isMine = false;
         this.color = 'white'
+        this.visited = false;
     }
 
     getPos() {
@@ -61,8 +62,8 @@ export class Field {
         ctx.fill();
         ctx.fillStyle = '#011526';
         ctx.font = `bold ${textSize}px "Open Sans", sans-serif`;
-        // if(this.count > 0 && this.state != 'hidden'){
-        if (this.count)
+        if(this.count > 0 && this.state != 'hidden')
+        // if (this.count)
             ctx.fillText(this.count, textX, textY);
         // }
         // ctx.lineWidth = 10;

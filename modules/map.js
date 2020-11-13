@@ -5,7 +5,7 @@ export class Map {
         this.map = []; // first array is x, second is y
         this.width = width;
         this.height = height;
-        this.mineCount = 50;
+        this.mineCount = 60;
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
         // this.ctx.drawField = this.drawField.bind(this);
@@ -43,16 +43,31 @@ export class Map {
                 this.setAdjacent(randX, randY);
                 this.mineCount--;
             }
+        }
 
+        this.uncoverSafeFields(this.firstClick.x, this.firstClick.y);
+    }
+
+    uncoverSafeFields(origX, origY){
+        for(let x = origX - 1; x <= origX + 1; x++){
+            for(let y = origY - 1; y <= origY + 1; y++){
+                if(x < 0 || y < 0 || x >= this.width || y >= this.height) continue; // Out of Bounds.
+                if(this.map[x][y].visited) continue; // Already visited
+                if(this.map[x][y].isMine) continue; // Is a mine
+                this.map[x][y].state = 'shown';
+                this.map[x][y].visited = true;
+                if(this.map[x][y].count > 0) continue; // Recurse if doesn't have a number.
+                this.uncoverSafeFields(x, y, 1);
+            }
         }
     }
 
     setAdjacent(x, y) {
         for (let adjX = x - 1; adjX <= x + 1; adjX++) {
             for (let adjY = y - 1; adjY <= y + 1; adjY++) {
-                if(adjX == x && adjY == y) continue;
-                if(adjX < 0 || adjY < 0 || adjX >= this.width || adjY >= this.height) continue;
-                if(this.map[adjX][adjY].isMine) continue;
+                if(adjX == x && adjY == y) continue; // Can't set itself
+                if(adjX < 0 || adjY < 0 || adjX >= this.width || adjY >= this.height) continue; // Out of Bounds
+                if(this.map[adjX][adjY].isMine) continue; // is a mine
                 this.map[adjX][adjY].count++;
             }
         }
