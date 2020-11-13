@@ -5,10 +5,11 @@ export class Map {
         this.map = []; // first array is x, second is y
         this.width = width;
         this.height = height;
+        this.mineCount = 50;
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.strokeStyle = 'green';
-        this.ctx.drawField = this.drawField.bind(this);
+        // this.ctx.drawField = this.drawField.bind(this);
+        this.firstClick = null;
 
         this.init();
         this.draw();
@@ -19,20 +20,42 @@ export class Map {
         for (let x = 0; x < this.width; x++) {
             const column = [];
             for (let y = 0; y < this.height; y++) {
-                column.push(new Field(x, y));
+                const field = new Field(x, y);
+                column.push(field);
             }
             this.map.push(column);
         }
 
         // Setup Canvas
-        this.canvas.width = `${Field.WIDTH * this.width + 1}`;
-        this.canvas.height = `${Field.HEIGHT * this.height + 1}`;
+        this.canvas.width = `${Field.WIDTH * this.width}`;
+        this.canvas.height = `${Field.HEIGHT * this.height}`;
         this.canvas.addEventListener('click', (e) => { this.handleClick(e, 0) });
         this.canvas.addEventListener('contextmenu', (e) => { this.handleClick(e, 1); });
     }
 
     generate() {
+        while (this.mineCount > 0) {
+            const randX = Math.floor(Math.random() * this.width);
+            const randY = Math.floor(Math.random() * this.height);
+            if (this.map[this.firstClick.x][this.firstClick.y].safePos(randX, randY) && !this.map[randX][randY].isMine) {
+                this.map[randX][randY].isMine = true;
+                this.map[randX][randY].count = 0;
+                this.setAdjacent(randX, randY);
+                this.mineCount--;
+            }
 
+        }
+    }
+
+    setAdjacent(x, y) {
+        for (let adjX = x - 1; adjX <= x + 1; adjX++) {
+            for (let adjY = y - 1; adjY <= y + 1; adjY++) {
+                if(adjX == x && adjY == y) continue;
+                if(adjX < 0 || adjY < 0 || adjX >= this.width || adjY >= this.height) continue;
+                if(this.map[adjX][adjY].isMine) continue;
+                this.map[adjX][adjY].count++;
+            }
+        }
     }
 
     draw() {
@@ -44,27 +67,26 @@ export class Map {
         }
     }
 
-    drawField(x, y, r, fill) {
-        this.ctx.beginPath();
-        x = parseInt(x) + r;
-        y = parseInt(y) + r;
-        this.ctx.arc(x, y, r, 0, Math.PI * 2, true);
-        this.ctx.fillStyle = fill;
-        this.ctx.fill();
-        this.ctx.lineWidth = 10;
-        this.ctx.strokeStyle = 'white';
-        this.ctx.stroke();
-    }
-
     handleClick(e, mouse) {
         e.preventDefault();
         const x = Math.floor(e.offsetX / Field.WIDTH);
         const y = Math.floor(e.offsetY / Field.HEIGHT);
         const clickedField = this.map[x][y];
-        if (mouse == 0) // Left Click
-            clickedField.state = 'shown';
-        if (mouse == 1 && clickedField.state != 'shown')
-            clickedField.state = 'flagged';
+
+        console.log(clickedField);
+
+        // Left Click
+        if (mouse == 0) {
+            if (!this.firstClick) {
+                this.firstClick = clickedField;
+                this.generate();
+            }
+
+            clickedField.click(()=> {alert('boom')});
+        }
+        if (mouse == 1)
+            clickedField.toggle();
+            // clickedField.state = 'flagged';
         // clickedField.draw(this.ctx);
         this.draw();
     }
