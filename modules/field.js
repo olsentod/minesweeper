@@ -71,16 +71,15 @@ export class Field {
     }
 
     getFill() {
-        if(this.isHovering) return '#FFF000' 
         switch (this.state) {
             case 'hidden':
-                return '#A4B5BF'
+                return `rgba(164, 181, 191, ${this.isHovering ? '0.5' : '1'})`
             case 'flagged':
-                return '#D97E4A'
+                return `rgba(217, 126, 74, ${this.isHovering ? '0.5' : '1'})`
             case 'shown':
-                return '#5e666b'
+                return `rgba(94, 102, 107, 1)`
             default:
-                return 'rgba(0,0,200,1)'
+                return `rgba(0,0,200, ${this.isHovering ? '0.5' : '1'})`
         }
     }
 

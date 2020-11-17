@@ -1,18 +1,28 @@
-export class Game{
-    constructor(){
-        this.score = null;
-        this.time = null;
+export class Game {
+    constructor() {
+        this.score = 10;
+        this.time = '2:00';
+        this.init();
     }
 
-    init(){
-        
+    init() {
+        this.update();
     }
 
-    update(){
+    update() {
+        this.updateTime();
+        this.updateScore();
+    }
+
+    draw() {
 
     }
 
-    draw(){
-        
+    updateTime() {
+        document.getElementById('time').innerHTML = this.time;
+    }
+
+    updateScore() {
+        document.getElementById('mine-count').innerHTML = this.score;
     }
 }
