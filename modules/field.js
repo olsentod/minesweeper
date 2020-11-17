@@ -5,6 +5,7 @@ export class Field {
         this.state = 'hidden' // flagged, hidden, shown
         this.count = 0;
         this.isMine = false;
+        this.isHovering = false;
         this.color = 'white'
         this.visited = false;
     }
@@ -62,16 +63,15 @@ export class Field {
         ctx.fill();
         ctx.fillStyle = '#011526';
         ctx.font = `bold ${textSize}px "Open Sans", sans-serif`;
-        if(this.count > 0 && this.state != 'hidden')
-        // if (this.count)
+        if(this.count > 0 && this.state == 'shown')
             ctx.fillText(this.count, textX, textY);
-        // }
         // ctx.lineWidth = 10;
         // ctx.strokeStyle = 'black';
         // ctx.stroke();
     }
 
     getFill() {
+        if(this.isHovering) return '#FFF000' 
         switch (this.state) {
             case 'hidden':
                 return '#A4B5BF'
