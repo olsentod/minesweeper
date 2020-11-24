@@ -1,6 +1,7 @@
 import {
     Field
 } from "./field.js";
+import { Game } from "./game.js";
 
 export class Map {
     constructor(width, height) {
@@ -115,11 +116,13 @@ export class Map {
         e.preventDefault();
         const {x, y} = this.screenToMapCoords(e.offsetX, e.offsetY);
         const clickedField = this.getField(x, y);
+        
 
         // Left Click
         if (mouse == 0) {
             if (!this.firstClick) {
                 this.firstClick = clickedField;
+                Game.getInstance().start();
                 this.generate();
             }
 
@@ -128,7 +131,7 @@ export class Map {
 
 
             clickedField.click(() => {
-                alert('boom')
+                Game.getInstance().explode();
             });
         }
         if (mouse == 1)
