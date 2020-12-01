@@ -1,3 +1,5 @@
+import { Game } from "./game.js";
+
 export class Field {
     constructor(x, y) {
         this.x = x;
@@ -25,23 +27,24 @@ export class Field {
 
     click(callback) {
         this.state = 'shown';
-        if (this.isMine) callback();
+        if (this.isMine) 
+            Game.getInstance().explode();
     }
 
     toggle() {
         switch (this.state) {
             case 'hidden':
                 this.state = 'flagged';
-                break;
+                return -1;
             case 'flagged':
                 this.state = 'question';
-                break;
+                return 1;
             case 'question':
                 this.state = 'hidden';
-                break;
+                return 0;
             case 'shown':
             default:
-                break;
+                return 0;
         }
     }
 
@@ -53,7 +56,6 @@ export class Field {
         const textX = x + (Field.WIDTH / 2) - offset * 2;
         const textY = y + (Field.WIDTH / 2) + 1;
         let color = this.getFill();
-        // if (this.isMine) color = 'black'
 
         ctx.beginPath();
         x = parseInt(x) + r;
@@ -65,9 +67,6 @@ export class Field {
         ctx.font = `bold ${textSize}px "Open Sans", sans-serif`;
         if(this.count > 0 && this.state == 'shown')
             ctx.fillText(this.count, textX, textY);
-        // ctx.lineWidth = 10;
-        // ctx.strokeStyle = 'black';
-        // ctx.stroke();
     }
 
     getFill() {

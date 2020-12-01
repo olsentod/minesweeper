@@ -1,17 +1,16 @@
-import {
-    Field
-} from "./field.js";
+import { Field } from "./field.js";
 import { Game } from "./game.js";
+import { MINE_COUNT } from './constants.js'
 
 export class Map {
     constructor(width, height) {
         this.map = []; // first array is x, second is y
         this.width = width;
         this.height = height;
-        this.mineCount = 20;
+        this.mineCount = MINE_COUNT;
+        this.score = MINE_COUNT;
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
-        // this.ctx.drawField = this.drawField.bind(this);
         this.firstClick = null;
         this.hover = null;
 
@@ -122,20 +121,20 @@ export class Map {
         if (mouse == 0) {
             if (!this.firstClick) {
                 this.firstClick = clickedField;
-                Game.getInstance().start();
+                Game.start();
                 this.generate();
             }
 
             if (clickedField.count == 0 && !clickedField.isMine)
                 this.uncoverSafeFields(clickedField.x, clickedField.y);
 
-
-            clickedField.click(() => {
-                Game.getInstance().explode();
-            });
+            // Defaults to a mine
+            clickedField.click();
         }
-        if (mouse == 1)
-            clickedField.toggle();
+        if (mouse == 1){
+            this.score += clickedField.toggle();
+            Game.setScore(this.score);
+        }
         this.draw();
     }
 

@@ -1,10 +1,19 @@
+import {
+    MINE_COUNT
+} from './constants.js'
+
 export class Game {
     constructor() {
-        this.score = 10;
         this.startTime = new Date();
         this.endTime = new Date();
         this.timer = null;
         this.instance = this;
+        this.init();
+    }
+
+    init() {
+        document.getElementById('time').innerHTML = Game.convertTime(0);
+        document.getElementById('mine-count').innerHTML = MINE_COUNT;
     }
 
     static getInstance() {
@@ -12,35 +21,40 @@ export class Game {
         return this.instance;
     }
 
-    start(){
-        this.startTime = new Date();
-        Game.getInstance().timer = setInterval(this.updateTime, 100);
-        // this.updateTime();
+    static setScore(score) {
+        document.getElementById('mine-count').innerHTML = score;
     }
 
-    update() {
-        this.updateTime();
-        this.updateScore();
+    static setTime(time) {
+        document.getElementById('time').innerHTML = Game.convertTime(time);
     }
 
-    draw() {
-
+    static updateTime() {
+        Game.setTime(new Date() - Game.getInstance().startTime);
     }
 
-    updateTime() {
-        const time = new Date() - Game.getInstance().startTime;
-        console.log('inside', time);
-        document.getElementById('time').innerHTML = time;
+    static start() {
+        Game.getInstance().startTime = new Date();
+        Game.getInstance().timer = setInterval(Game.updateTime, 13);
     }
 
-    explode(){
+    static explode() {
         clearInterval(Game.getInstance().timer);
         Game.getInstance().endTime = new Date();
-        const time = Game.getInstance().endTime - Game.getInstance().startTime;
-        document.getElementById('time').innerHTML = time;
+        Game.setTime(Game.getInstance().endTime - Game.getInstance().startTime);
     }
 
-    updateScore() {
-        document.getElementById('mine-count').innerHTML = this.score;
+    static convertTime(time) {
+        const ms = time % 1000;
+        time = (time - ms) / 1000;
+        const secs = time % 60;
+        time = (time - secs) / 60;
+        const mins = time % 60;
+        const hrs = (time - mins) / 60;
+
+        return String(hrs).padStart(2, "0") +
+            ':' + String(mins).padStart(2, "0") +
+            ':' + String(secs).padStart(2, "0") +
+            '.' + String(ms).padStart(3, "0");
     }
 }
