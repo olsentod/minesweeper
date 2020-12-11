@@ -1,6 +1,4 @@
-import {
-    MINE_COUNT
-} from './constants.js'
+import { Map } from "./map.js";
 
 export class Game {
     constructor() {
@@ -8,12 +6,6 @@ export class Game {
         this.endTime = new Date();
         this.timer = null;
         this.instance = this;
-        this.init();
-    }
-
-    init() {
-        document.getElementById('time').innerHTML = Game.convertTime(0);
-        document.getElementById('mine-count').innerHTML = MINE_COUNT;
     }
 
     static getInstance() {
@@ -33,15 +25,52 @@ export class Game {
         Game.setTime(new Date() - Game.getInstance().startTime);
     }
 
+    static init(mineCount, mapWidth, mapHeight){
+        const game = Game.getInstance();
+        game.mineCount = mineCount;
+        game.mapWidth = mapWidth;
+        game.mapHeight = mapHeight;
+    }
+
+    static setup() {
+        const game = Game.getInstance();
+        document.getElementById('time').innerHTML = Game.convertTime(0);
+        document.getElementById('mine-count').innerHTML = game.mineCount;
+
+        // Clone canvas to remove any previous logic.
+        const oldCanvas = document.getElementById("canvas");
+        const newCanvas = oldCanvas.cloneNode(true);
+        oldCanvas.parentNode.replaceChild(newCanvas, oldCanvas);
+        new Map(game.mineCount, game.mapWidth, game.mapHeight);
+    }
+
     static start() {
         Game.getInstance().startTime = new Date();
         Game.getInstance().timer = setInterval(Game.updateTime, 13);
     }
 
-    static explode() {
+    static finalTime() {
         clearInterval(Game.getInstance().timer);
         Game.getInstance().endTime = new Date();
         Game.setTime(Game.getInstance().endTime - Game.getInstance().startTime);
+    }
+
+    static win() {
+        Game.finalTime();
+        Game.showDialog('You Win! ☺');
+        Game.getInstance().instance = null;
+    }
+
+    static explode() {
+        Game.finalTime();
+        Game.showDialog('You Lose! ☹');
+        Game.getInstance().instance = null;
+    }
+
+    static showDialog(msg) {
+        const dialog = document.getElementById('dialog');
+        dialog.classList.add('active');
+        dialog.querySelector('h1').innerHTML = msg;
     }
 
     static convertTime(time) {

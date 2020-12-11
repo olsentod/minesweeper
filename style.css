@@ -1,0 +1,102 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #011526;
+  color: rgba(164, 181, 191);
+  font-family: "Open Sans", sans-serif;
+}
+canvas {
+  cursor: pointer;
+}
+
+.game {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.game.active {
+  display: flex;
+}
+
+#dialog {
+  position: absolute;
+  background-color: rgba(164, 181, 191, 0.85);
+  color: #011526;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 500ms ease;
+}
+#dialog.active {
+  opacity: 1;
+  z-index: 1;
+}
+#dialog h1 {
+  font-size: 4rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+#dialog button {
+  background-color: #011526;
+  color: white;
+  padding: 0.5rem 3rem;
+  font-size: 1.25rem;
+  border: 0;
+  cursor: pointer;
+}
+
+.start-screen {
+  display: none;
+  flex-direction: column;
+  background-color: rgba(164, 181, 191);
+  color: #011526;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+.start-screen.active {
+  display: flex;
+}
+
+.start-screen h1 {
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.start-screen .input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+.start-screen .input-group input {
+  padding: 0.5rem 0.1rem;
+}
+
+.start-screen button {
+  background-color: #011526;
+  color: white;
+  padding: 0.5rem 3rem;
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  border: 0;
+  cursor: pointer;
+}
+
+input {
+  color: #011526;
+  border: 0;
+}

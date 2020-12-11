@@ -25,10 +25,10 @@ export class Field {
         return !((protectedX.left <= x && protectedX.right >= x) && (protectedY.top <= y && protectedY.bottom >= y));
     }
 
-    click(callback) {
+    click() {
         this.state = 'shown';
         if (this.isMine) 
-            Game.getInstance().explode();
+            Game.explode();
     }
 
     toggle() {
@@ -72,13 +72,13 @@ export class Field {
     getFill() {
         switch (this.state) {
             case 'hidden':
-                return `rgba(164, 181, 191, ${this.isHovering ? '0.5' : '1'})`
+                return `rgba(164, 181, 191, ${this.isHovering ? '0.7' : '1'})`
             case 'flagged':
-                return `rgba(217, 126, 74, ${this.isHovering ? '0.5' : '1'})`
+                return `rgba(217, 126, 74, ${this.isHovering ? '0.7' : '1'})`
             case 'shown':
                 return `rgba(94, 102, 107, 1)`
             default:
-                return `rgba(0,0,200, ${this.isHovering ? '0.5' : '1'})`
+                return `rgba(52,123,121, ${this.isHovering ? '0.7' : '1'})`
         }
     }
 

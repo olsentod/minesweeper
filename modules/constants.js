@@ -1,1 +1,0 @@
-export const MINE_COUNT = 10;
