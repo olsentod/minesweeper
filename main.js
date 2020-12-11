@@ -24,5 +24,6 @@ document.getElementById('start-button').addEventListener('click', ()=> {
 
 document.getElementById('restart-button').addEventListener('click', () => {
     document.getElementById('dialog').classList.remove('active');
-    Game.setup();
+    document.querySelector('.game').classList.remove('active');
+    document.querySelector('.start-screen').classList.add('active');
 })
